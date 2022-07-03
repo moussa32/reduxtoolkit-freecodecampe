@@ -1,9 +1,19 @@
 import { ChevronDown, ChevronUp } from "../icons";
 import { useDispatch } from "react-redux";
-import { removeItem } from "../features/cart/cartSlice";
+import { decrease, increase, removeItem } from "../features/cart/cartSlice";
+import { memo } from "react";
 
 const CartItem = ({ id, img, title, price, amount }) => {
   const dispatch = useDispatch();
+
+  const handleDecrease = () => {
+    if (amount == 1) {
+      dispatch(removeItem(id));
+    } else {
+      dispatch(decrease({ id }));
+    }
+  };
+
   return (
     <article className="cart-item">
       <img src={img} alt={title} title={title} />
@@ -15,11 +25,11 @@ const CartItem = ({ id, img, title, price, amount }) => {
         </button>
       </div>
       <div>
-        <button className="amount-btn">
+        <button className="amount-btn" onClick={() => dispatch(increase({ id }))}>
           <ChevronUp />
         </button>
         <p className="amount">{amount}</p>
-        <button className="amount-btn">
+        <button className="amount-btn" onClick={handleDecrease}>
           <ChevronDown />
         </button>
       </div>
@@ -27,4 +37,4 @@ const CartItem = ({ id, img, title, price, amount }) => {
   );
 };
 
-export default CartItem;
+export default memo(CartItem);
